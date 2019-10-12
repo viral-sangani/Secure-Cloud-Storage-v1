@@ -26,16 +26,16 @@ def encrypt_blob(blob, public_key):
 
     return base64.b64encode(encrypted)
 
-fd = open("public_key.pem", "rb")
-public_key = fd.read()
-fd.close()
+# fd = open("public_key.pem", "rb")
+# public_key = fd.read()
+# fd.close()
 
-fd = open("test.jpeg", "rb")
-unencrypted_blob = fd.read()
-fd.close()
+# fd = open("test.jpeg", "rb")
+# unencrypted_blob = fd.read()
+# fd.close()
 
-encrypted_blob = encrypt_blob(unencrypted_blob, public_key)
+# encrypted_blob = encrypt_blob(unencrypted_blob, public_key)
 
-fd = open("encrypted_img.jpg", "wb")
-fd.write(encrypted_blob)
-fd.close()
+# fd = open("encrypted_img.jpg", "wb")
+# fd.write(encrypted_blob)
+# fd.close()
