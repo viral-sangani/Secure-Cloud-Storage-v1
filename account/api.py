@@ -1,8 +1,11 @@
 from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from account.serializers import  RegisterSerializer
+from account.serializers import  RegisterSerializer, UserSerializer
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
@@ -16,3 +19,12 @@ class RegisterAPI(generics.GenericAPIView):
         return Response({
             'user': model_to_dict(user_token, fields=['id', 'username', 'email']),
         })
+
+class UserAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if request._user:
+            return Response(User.objects.get(pk=request._user.pk))
+        else:
+            return Response({"Error":"Please Login"})
