@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 
 # /api/auth/*
 urlpatterns = [
-    path('', include('rest_auth.urls')),
+    path('auth/', include('rest_auth.urls')),
     path('auth/register/', RegisterAPI.as_view()),
     path('auth/user/',UserAPI.as_view()),
     path('file/encrypt/', FileAPI.as_view()),

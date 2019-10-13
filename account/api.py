@@ -58,7 +58,6 @@ class FileAPI(APIView):
 
 class GetFilesAPI(APIView):
     permission_classes = [IsAuthenticated]
-    parser_classes = (MultiPartParser, FormParser)
     def get(self, request):
         res = []
         count = 1
