@@ -12,6 +12,26 @@ from account.models import Key, encrypted_storage
 from django.core.files.base import ContentFile
 import base64
 from django.forms.models import model_to_dict
+from rest_auth.views import LoginView
+from twofactorauth.models import Twofactorauth
+
+class LoginAPI(LoginView):
+    def get_response(self):
+
+        if '2fa_token' in self.request._data:
+            tfa_user_obj = Twofactorauth.objects.get(user=self.user)
+            if str(tfa_user_obj.otp) == self.request._data['2fa_token']:
+                original_response = super().get_response()
+                res_dic = {"status":"success"}
+                original_response.data.update(res_dic)
+                print(original_response)
+                print(original_response.__dict__)
+                return original_response
+            else:
+                return Response({'Error': 'Wrong OTP Entered. Please Try Again'})
+        else:
+            return Response({'Error': 'Please Provide TwoFactor Authentication'})
+
 
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
