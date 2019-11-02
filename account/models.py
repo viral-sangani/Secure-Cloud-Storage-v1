@@ -10,13 +10,16 @@ class File(models.Model):
     class Meta:
         db_table = "File"
 
-class Keys(models.Model):
+class Key(models.Model):
     private_key = models.TextField()
     public_key= models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         db_table = "keys"
+    
+    def __str__(self):
+        return self.user.username
 
 
 class encrypted_storage(models.Model):

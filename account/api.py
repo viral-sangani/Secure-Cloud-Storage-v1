@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 from account.Encryption.generate_RSA_key import generate
 from account.Encryption.RSA_encrypt import encrypt_blob
-from account.models import Keys, encrypted_storage
+from account.models import Key, encrypted_storage
 from django.core.files.base import ContentFile
 import base64
 from django.forms.models import model_to_dict
@@ -22,7 +22,7 @@ class RegisterAPI(generics.GenericAPIView):
         user = serializer.save()
         user_token = User.objects.get(username=request.data['username'])
         private, public = generate()
-        Keys.objects.create(
+        Key.objects.create(
             private_key=private,
             public_key=public,
             user=user_token
@@ -41,19 +41,20 @@ class UserAPI(APIView):
             return Response({"Error":"Please Login"})
 
 
-class FileAPI(APIView):
+class FileUploadAPI(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
+    
     def post(self, request, *args, **kwargs):
         file = request.data['file']
-        key = Keys.objects.get(user=request.user)
+        key = Key.objects.get(user=request.user)
         unencrypted_blob = file.read()
         public_key = key.public_key
         encrypted_blob = encrypt_blob(unencrypted_blob, public_key)
-        temp = encrypted_storage()
-        temp.user = request.user
-        temp.encrypted_blob = ContentFile(base64.b64decode(encrypted_blob), name="temp.jpg")
-        temp.save()
+        encrypt_obj = encrypted_storage()
+        encrypt_obj.user = request.user
+        encrypt_obj.encrypted_blob = ContentFile(base64.b64decode(encrypted_blob), name="temp.jpg")
+        encrypt_obj.save()
         return Response({"Success":"Image Received"})
 
 class GetFilesAPI(APIView):
