@@ -4,3 +4,4 @@
 *$py.class
 
 *.sqlite3
+*/__pycharm__/*
