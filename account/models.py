@@ -1,15 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class File(models.Model):
-
-    file = models.FileField(blank=False, null=False)
-    remark = models.CharField(max_length=20)
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = "File"
-
 class Key(models.Model):
     private_key = models.TextField()
     public_key= models.TextField()
@@ -23,9 +14,12 @@ class Key(models.Model):
 
 
 class encrypted_storage(models.Model):
-    encrypted_blob = models.FileField(upload_to='encrypted_data/', blank=False, null=False)
+    encrypted_blob = models.BinaryField(blank=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
+    file_name = models.CharField(max_length=15000)
+    size = models.CharField(max_length=150)
+
 
     class Meta:
         db_table = "encrypted_storage"
