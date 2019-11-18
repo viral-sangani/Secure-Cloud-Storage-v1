@@ -19,7 +19,7 @@ class encrypted_storage(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     file_name = models.CharField(max_length=15000)
     size = models.CharField(max_length=150)
-
+    ext = models.CharField(max_length=100)
 
     class Meta:
         db_table = "encrypted_storage"
