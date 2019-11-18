@@ -1,5 +1,5 @@
 from django.urls import path, include
-from account.api import RegisterAPI, UserAPI, FileUploadAPI, GetFilesAPI, LoginAPI, FileDownloadAPI
+from account.api import RegisterAPI, UserAPI, FileUploadAPI, GetFilesAPI, LoginAPI, FileDownloadAPI, DeleteFilesAPI
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_auth.urls import LogoutView
@@ -15,6 +15,7 @@ urlpatterns = [
     path('file/encrypt/', FileUploadAPI.as_view()),
     path('file/decrypt/', FileDownloadAPI.as_view()),
     path('file/show/', GetFilesAPI.as_view()),
+    path('file/delete/', DeleteFilesAPI.as_view()),
     
     # path('file/encrypt/', FileAPI.as_view())
 ] 

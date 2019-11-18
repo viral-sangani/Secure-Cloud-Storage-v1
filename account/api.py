@@ -74,8 +74,7 @@ class FileUploadAPI(APIView):
 
         encrypted_blob = encrypt_blob(unencrypted_blob, public_key)
         
-        
-
+    
         encrypt_obj = encrypted_storage()
         encrypt_obj.user = request.user
         encrypt_obj.encrypted_blob = encrypted_blob
@@ -84,20 +83,12 @@ class FileUploadAPI(APIView):
         encrypt_obj.save()
 
 
-        print(encrypt_obj.encrypted_blob)
-        print(type(encrypt_obj.encrypted_blob))
-        
-
         fp = open("en.txt","wb")
         fp.write(encrypted_blob)
         fp.close()
 
 
         private_key = key.private_key
-        print(encrypt_obj.pk)
-        print(len(encrypt_obj.encrypted_blob))
-        # decrypted_blob = decrypt_blob(encrypt_obj.encrypted_blob, private_key)
-        print("Done")
         return Response({"Success":"Image Received"})
 
 class FileDownloadAPI(APIView):
@@ -111,18 +102,16 @@ class FileDownloadAPI(APIView):
 
 
         private_key = key.private_key
-        temp_name = "temp_"+str(random.randint(0,999999))
+        temp_name = decrypt_obj.file_name
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         
 
-
         decrypted_blob = decrypt_blob(decrypt_obj.encrypted_blob, private_key)
-        file_path = BASE_DIR+"/media/tmp/"+temp_name+".jpg"
-        download_path = "/media/tmp/"+temp_name+".jpg"
+        file_path = BASE_DIR+"/media/tmp/"+temp_name
+        download_path = "/media/tmp/"+temp_name
         fp = open(file_path,"wb")
         fp.write(decrypted_blob)
         fp.close()
-        print(file_path)
         try:
             return Response({'path':download_path, 'file_name':temp_name})
         finally:
@@ -138,4 +127,11 @@ class GetFilesAPI(APIView):
             res.append({count:{ "name": item.file_name, "size": item.size, "id":item.pk}})
             count += 1
         return Response(res)
+        
+
+class DeleteFilesAPI(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        encrypted_storage.objects.get(pk=request.data['id'], user=request.user).delete()
+        return Response({"Status": "Success"})
         
