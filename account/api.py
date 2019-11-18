@@ -135,7 +135,7 @@ class GetFilesAPI(APIView):
         res = []
         count = 1
         for item in encrypted_storage.objects.filter(user=request.user):
-            res.append({count:{ "name": item.file_name, "size": item.size, "id":item.pk}})
+            res.append({ "name": item.file_name, "size": item.size, "id":item.pk})
             count += 1
         return Response(res)
         
